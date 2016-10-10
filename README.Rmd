@@ -1,0 +1,239 @@
+---
+title: BAY AREA BIKE SHARE PROGRAM
+author: Pavel Kucherbaev
+date: August 18, 2016
+output:
+  md_document:
+    variant: markdown_github
+---
+# BAY AREA BIKE SHARE PROGRAM
+
+---------
+
+```{r, include=FALSE, cache=FALSE}
+source("dataProcessing.r")
+```
+
+## 1. The Scope Of The Analysis
+
+#### Unbalanced stations
+
+Bike sharing programs usually have a problem of **unbalanced stations** where the **number of trips from** these stations is **higher** than the number of **trips to** these stations (or vice versa). Because of this issue there is a need to transfer bicycles using trucks between stations. 
+
+####  Not uniform usage of bicycles
+
+Some stations are very popular with many rents, while some have only few rents. Because of that in general bicycles at popular stations tend to be used significantly more often than bicycles at not popular stations. A not uniform usage of bicycles leads to a need of bringing heavily used bicycles often to a workshop, while there are some bicycles almost new and used only a few times.
+
+The goal is to analyse the data and see if there is a possibility to suggest bicycle transfers in a way to balance bicycle usage.
+
+## 2. Dataset overview
+We download the dataset for September 2014 - August 2015 from http://www.bayareabikeshare.com/open-data. The zip file contains several files. In this analysis we are specifically interested in: 201508_trip_data.csv, 201508_station_data.csv. The structure of these datasets could be found in README.txt file.
+
+```{r, echo = FALSE}
+trips <- getTrips("babs_open_data_year_2/201508_trip_data.csv")
+```
+
+### 2.1 Usage by time
+
+Riders who purchased 1-3 days passes are called *Customers*. *Subscribers* are the riders who purchased an annual pass. These two types of users show different behavior in using the system.
+
+#### Subscribers vs Customers | Weekday vs Weekend
+
+```{r, echo = FALSE, fig.width=12, fig.height=6}
+ggplot(trips, aes(x = Start.Hour, fill = Subscriber.Type),stat="count") + geom_histogram(binwidth = 1) + facet_grid(. ~ DayType) + theme(legend.position="bottom")
+```
+
+During weekdays Subscribers use the service for commuting purpuses with peaks at 8AM and 6PM. During weekends Subscribers and Customers have a very similar time usage pattern, suggesting that probably during Weekends Subscribers use the service mostly for leasure purposes as probably Customers do in general.
+
+#### Month to month usage
+
+```{r, echo = FALSE, fig.width=12, fig.height=6}
+ggplot(trips, aes(x = Start.Hour, fill = Subscriber.Type)) + geom_histogram(binwidth = 1) + facet_grid(DayType ~ Start.Month.Number) + theme(legend.position="bottom")
+```
+
+We clearly see a seasonality pattern, where the smallest number of trips are recorded in December and the highest in June. It is interesting that people in October are also very active. This is probably caused by the fact that in Bay Area the weather allows to ride bicycle also in this month too and there are less people on vacations than in Summer months.
+
+### 2.2 Stations
+
+To analyse data geographically we need to have *lat* / *long* positions of each station. We tried first to do it using the package *ggmap*, function *geo_code*, but we get incorrect values for some stations (station name queries are ambiguous in Google Maps). Therefore we use the station data .CSV file available in the dataset package:
+
+```{r, include=FALSE, cache=FALSE}
+stations <- getStations("babs_open_data_year_2/201508_station_data.csv")
+```
+
+```{r, include=FALSE, cache=FALSE}
+# Get maps of areas
+MapBayArea <- get_map(location = c(mean(stations$long),mean(stations$lat)), zoom = 10, color = "bw")
+MapSanFrancisco <- get_map("Union Square, San Francisco", zoom = 14, color = "bw")
+MapPaloAlto <- get_map("Palo Alto", zoom = 12, color = "bw")
+MapSanJose <- get_map("San Jose", zoom = 14, color = "bw")
+```
+
+
+Bike Share program words not only in San Francisco, but also in [`r unique(stations[stations$city != "San Francisco",]$city)`](http://www.bayareabikeshare.com/stations). Here is how `r nrow(stations)` stations are spread in Bay Area (each white dot is an individual station):
+
+```{r, echo = FALSE, fig.width=12, fig.height=12}
+ggmap(MapBayArea, extent = "device", ylab = "Latitude", xlab = "Longitude",darken = 0.75) + geom_point(data = stations, aes(x=long, y=lat), color = "white")
+```
+
+### 2.3 Trips Direction
+
+```{r, include=FALSE, cache=FALSE}
+same_terminal <- trips[trips$Start.Terminal == trips$End.Terminal,]
+same_terminal_mistake <- same_terminal[same_terminal$Duration < 120,]
+```
+
+`r round(100*nrow(same_terminal)/nrow(trips),2)`% of trips end at the same Station as they started. Out of those `r round(100*nrow(same_terminal_mistake)/nrow(same_terminal),2)`% are immediate changes, when a rider took a bicycle and gave it back in less than 2 minutes (e.g. decided to pick another bicycle for example).
+
+```{r, include=FALSE, cache=FALSE}
+trips_daily <- getAggregatedTrips(trips)
+
+```
+
+Now we analyze where Customers and Subscribers travel using shared bicycles at different time of days on Weekdays and Weekends. On the maps below we show only the stations with the highest traffic (to have the plot less cluttered with labels). The lines in red (salmon) show the trips towards North and the lines in blue (turquoise) - towards South.
+
+#### San Francisco - Trips During Weekdays
+
+```{r, include=FALSE, cache=FALSE}
+SanFranciscoFlowPlot <- getFlowPlot(MapSanFrancisco, trips_daily[trips_daily$DayType == "Weekday",], stations)
+```
+
+```{r, echo = FALSE, fig.width=12, fig.height=12}
+SanFranciscoFlowPlot
+```
+
+Customers do not have route priorities depending on the time of the day. In mornings many Subscribers travel to the South towards Caltrain Station and Townsend 2nd and 7th St. There are also many Subscribers travelling from Caltrain Station towards Embarcadero. In afternoons many Subscribers also travel from all the Downtown to Caltrain Station and from 2nd and Townsend to Ferry Building. In evenings Subscribers do not have such distinct routes apart from trips towards the south of Market St.
+
+
+
+#### San Francisco - Trips During Weekends
+
+```{r, include=FALSE, cache=FALSE}
+SanFranciscoFlowPlot <- getFlowPlot(MapSanFrancisco, trips_daily[trips_daily$DayType == "Weekend",], stations)
+```
+
+```{r, echo = FALSE, fig.width=12, fig.height=12}
+SanFranciscoFlowPlot
+```
+
+During weekends the route preferences of Customers and Subscribers are similar (Market St and Embarcadero) providing an extra support for our hypothesis that Subscribers tend to use the service during weekends for leasure purposes.
+
+#### Palo Alto - Trips During Weekdays
+
+```{r, include=FALSE, cache=FALSE}
+PaloAltoFlowPlot <- getFlowPlot(MapPaloAlto, trips_daily[trips_daily$DayType == "Weekday",], stations)
+```
+
+```{r, echo = FALSE, fig.width=12, fig.height=12}
+PaloAltoFlowPlot
+```
+
+There is a clear pattern that Subscribers go in mornings to San Antonio Shopping Center from Caltrain Station and come back in afternoons. The Same in Mountain View - Subscribers go to Castro street in mornings and come back in afternoons.
+
+#### San Jose - Trips During Weekdays
+
+```{r, include=FALSE, cache=FALSE}
+SanJoseFlowPlot <- getFlowPlot(MapSanJose, trips_daily[trips_daily$DayType == "Weekday",], stations)
+```
+
+```{r, echo = FALSE, fig.width=12, fig.height=12}
+SanJoseFlowPlot
+```
+Many Subscribers go to San Jose Caltrain Station in mornings and come back in evenings.
+
+### 2.4 Intercity trips in Bay Area
+
+```{r, include=FALSE, cache=FALSE}
+InterCityTripsPlot <- getFlowPlot(MapBayArea, trips_daily[trips_daily$DayType == "Weekday",], stations, F)
+```
+
+
+Sometimes people even carry inter city trips using Bay Area Bike Share. 
+
+```{r, echo = FALSE, fig.width=10, fig.height=7}
+InterCityTripsPlot
+```
+
+```{r, include=FALSE, cache=FALSE}
+trips_intercity <- trips_daily[trips_daily$Start.City != trips_daily$End.City,]
+```
+
+They are not many. Only `r sum(trips_intercity$freq)` out of `r nrow(trips)` total trips for the period.
+
+#### INTERESTING FACT: Three friends doing an intercity trip
+
+We can find an interesting example how people went together from Palo Alto to San Francisco (it took them 5.13 hours) by bicycle in winter (January, 18). Thanksfuly the weather in San Francisco allows such trips. Still it was not cheap. 
+
+```{r, echo = FALSE}
+friends_trip <- trips[trips$Start.Terminal == 35,]
+friends_trip <- friends_trip[friends_trip$End.Terminal == 70,]
+
+kable(friends_trip[,c('Trip.ID','Start.Date','End.Date','Start.Station','End.Station','DayType')])
+```
+
+## 3. Potential Issue Analysis
+
+### 3.1 Unbalanced Stations
+
+```{r, include=FALSE, cache=FALSE}
+SanFranciscoStationsPlot <- getStationsBalancePlot(MapSanFrancisco,stations)
+```
+
+Blue/Purple are the stations which tend to have more bikes arriving than departing (up to `r round(max(stations$amount_net_percentage))`%). Yellow are those stations that tend to have more bikes departing than arriving (up to `r abs(round(min(stations$amount_net_percentage)))`%).
+
+#### Stations in San Francisco
+
+```{r, echo = FALSE, fig.width=8, fig.height=10}
+SanFranciscoStationsPlot
+```
+
+
+```{r, include=FALSE, cache=FALSE}
+
+PaloAltoStationsPlot <- getStationsBalancePlot(MapPaloAlto,stations)
+```
+
+#### Stations in Palo Alto, Redwood City, Mountain View
+
+```{r, echo = FALSE, fig.width=8, fig.height=10}
+PaloAltoStationsPlot
+```
+
+```{r, include=FALSE, cache=FALSE}
+
+SanJoseStationsPlot <- getStationsBalancePlot(MapSanJose,stations)
+```
+
+#### Stations in San Jose 
+
+```{r, echo = FALSE, fig.width=8, fig.height=10}
+SanJoseStationsPlot
+```
+
+### 3.2 Bicycle Usage
+
+```{r, echo = FALSE, fig.width=8, fig.height=6}
+bikes = count(trips, .(Bike))
+plotBikeUsageHistogram(bikes)
+usageModes <- find_modes(density(bikes$freq)$y)
+```
+
+As we assumed a half of bicycles were used in average `r round(density(bikes$freq)$x[usageModes][1])` times and another half `r round(density(bikes$freq)$x[usageModes][2])` times. In the ideal case (all bicycles are used equaly often) each bicycle would be used `r round(nrow(trips)/nrow(bikes))` times.
+
+## 4. Recommendations
+
+Here below we provide recommendations how to make the distribution of bicycle usage a more uniform or normal rather than bimodal. To do it we believe that bicycles which were extensively used in areas with high traffic should be moved to stations with low traffic, while bicycles which are almost new should be moved from stations with low traffic to stations with high traffic. Moving bicycles is also a cost so we believe that the right way to do this transfer is to do it along the regular bicycle transfer caused by inbalanced stations usage.
+
+
+```{r, include=FALSE, cache=FALSE}
+trips_net <- getTripsNet(trips)
+bikes_positions <- getBikesPosition(trips) 
+recommendations <- getTransferBikesRecommendations(trips_net, bikes_positions, stations)
+```
+
+**Based on the trips users did in the last day (based on the current dataset) we suggest to transfer bicycles based on the following recommendations.** These recommendations are balanced (the total number of bicycles to take off is equal to the total number to bring). The number of heavily- and used few times might be not balanced, but they are more priorities than an action order.
+
+```{r, echo = FALSE}
+kable(recommendations[,c('Terminal','Station','Recommendation')])
+```
+
