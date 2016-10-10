@@ -27,13 +27,13 @@ Riders who purchased 1-3 days passes are called *Customers*. *Subscribers* are t
 
 #### Subscribers vs Customers | Weekday vs Weekend
 
-![](2.Analysis_files/figure-markdown_github/unnamed-chunk-3-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-3-1.png)
 
 During weekdays Subscribers use the service for commuting purpuses with peaks at 8AM and 6PM. During weekends Subscribers and Customers have a very similar time usage pattern, suggesting that probably during Weekends Subscribers use the service mostly for leasure purposes as probably Customers do in general.
 
 #### Month to month usage
 
-![](2.Analysis_files/figure-markdown_github/unnamed-chunk-4-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
 We clearly see a seasonality pattern, where the smallest number of trips are recorded in December and the highest in June. It is interesting that people in October are also very active. This is probably caused by the fact that in Bay Area the weather allows to ride bicycle also in this month too and there are less people on vacations than in Summer months.
 
@@ -43,7 +43,7 @@ To analyse data geographically we need to have *lat* / *long* positions of each 
 
 Bike Share program words not only in San Francisco, but also in [](http://www.bayareabikeshare.com/stations). Here is how 70 stations are spread in Bay Area (each white dot is an individual station):
 
-![](2.Analysis_files/figure-markdown_github/unnamed-chunk-7-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 ### 2.3 Trips Direction
 
@@ -57,7 +57,7 @@ Now we analyze where Customers and Subscribers travel using shared bicycles at d
 
     ## Warning: Removed 210 rows containing missing values (geom_text_repel).
 
-![](2.Analysis_files/figure-markdown_github/unnamed-chunk-11-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
 Customers do not have route priorities depending on the time of the day. In mornings many Subscribers travel to the South towards Caltrain Station and Townsend 2nd and 7th St. There are also many Subscribers travelling from Caltrain Station towards Embarcadero. In afternoons many Subscribers also travel from all the Downtown to Caltrain Station and from 2nd and Townsend to Ferry Building. In evenings Subscribers do not have such distinct routes apart from trips towards the south of Market St.
 
@@ -67,7 +67,7 @@ Customers do not have route priorities depending on the time of the day. In morn
 
     ## Warning: Removed 210 rows containing missing values (geom_text_repel).
 
-![](2.Analysis_files/figure-markdown_github/unnamed-chunk-13-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
 During weekends the route preferences of Customers and Subscribers are similar (Market St and Embarcadero) providing an extra support for our hypothesis that Subscribers tend to use the service during weekends for leasure purposes.
 
@@ -77,7 +77,7 @@ During weekends the route preferences of Customers and Subscribers are similar (
 
     ## Warning: Removed 306 rows containing missing values (geom_text_repel).
 
-![](2.Analysis_files/figure-markdown_github/unnamed-chunk-15-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-15-1.png)
 
 There is a clear pattern that Subscribers go in mornings to San Antonio Shopping Center from Caltrain Station and come back in afternoons. The Same in Mountain View - Subscribers go to Castro street in mornings and come back in afternoons.
 
@@ -87,13 +87,13 @@ There is a clear pattern that Subscribers go in mornings to San Antonio Shopping
 
     ## Warning: Removed 324 rows containing missing values (geom_text_repel).
 
-![](2.Analysis_files/figure-markdown_github/unnamed-chunk-17-1.png) Many Subscribers go to San Jose Caltrain Station in mornings and come back in evenings.
+![](README_files/figure-markdown_github/unnamed-chunk-17-1.png) Many Subscribers go to San Jose Caltrain Station in mornings and come back in evenings.
 
 ### 2.4 Intercity trips in Bay Area
 
 Sometimes people even carry inter city trips using Bay Area Bike Share.
 
-![](2.Analysis_files/figure-markdown_github/unnamed-chunk-19-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-19-1.png)
 
 They are not many. Only 509 out of 354152 total trips for the period.
 
@@ -120,7 +120,7 @@ Blue/Purple are the stations which tend to have more bikes arriving than departi
 
     ## Warning: Removed 35 rows containing missing values (geom_label_repel).
 
-![](2.Analysis_files/figure-markdown_github/unnamed-chunk-23-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-23-1.png)
 
 #### Stations in Palo Alto, Redwood City, Mountain View
 
@@ -128,7 +128,7 @@ Blue/Purple are the stations which tend to have more bikes arriving than departi
 
     ## Warning: Removed 51 rows containing missing values (geom_label_repel).
 
-![](2.Analysis_files/figure-markdown_github/unnamed-chunk-25-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-25-1.png)
 
 #### Stations in San Jose
 
@@ -136,11 +136,11 @@ Blue/Purple are the stations which tend to have more bikes arriving than departi
 
     ## Warning: Removed 54 rows containing missing values (geom_label_repel).
 
-![](2.Analysis_files/figure-markdown_github/unnamed-chunk-27-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-27-1.png)
 
 ### 3.2 Bicycle Usage
 
-![](2.Analysis_files/figure-markdown_github/unnamed-chunk-28-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-28-1.png)
 
 As we assumed a half of bicycles were used in average 114 times and another half 924 times. In the ideal case (all bicycles are used equaly often) each bicycle would be used 530 times.
 
