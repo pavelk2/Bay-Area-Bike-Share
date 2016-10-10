@@ -12,6 +12,7 @@ output:
 
 ```{r, include=FALSE, cache=FALSE}
 source("dataProcessing.r")
+options( warn = -1 )
 ```
 
 ## 1. The Scope Of The Analysis
@@ -27,7 +28,7 @@ Some stations are very popular with many rents, while some have only few rents. 
 The goal is to analyse the data and see if there is a possibility to suggest bicycle transfers in a way to balance bicycle usage.
 
 ## 2. Dataset overview
-We download the dataset for September 2014 - August 2015 from http://www.bayareabikeshare.com/open-data. The zip file contains several files. In this analysis we are specifically interested in: 201508_trip_data.csv, 201508_station_data.csv. The structure of these datasets could be found in README.txt file.
+We download the dataset for September 2014 - August 2015 from http://www.bayareabikeshare.com/open-data. The zip file contains several files. In this analysis we are specifically interested in: __201508_trip_data.csv__, __201508_station_data.csv__. The structure of these datasets could be found in README.txt file.
 
 ```{r, echo = FALSE}
 trips <- getTrips("babs_open_data_year_2/201508_trip_data.csv")
@@ -51,7 +52,7 @@ During weekdays Subscribers use the service for commuting purpuses with peaks at
 ggplot(trips, aes(x = Start.Hour, fill = Subscriber.Type)) + geom_histogram(binwidth = 1) + facet_grid(DayType ~ Start.Month.Number) + theme(legend.position="bottom")
 ```
 
-We clearly see a seasonality pattern, where the smallest number of trips are recorded in December and the highest in June. It is interesting that people in October are also very active. This is probably caused by the fact that in Bay Area the weather allows to ride bicycle also in this month too and there are less people on vacations than in Summer months.
+We clearly see seasonal pattern, where the smallest number of trips are recorded in December and the highest in June. It is interesting that people in October are also very active. This is probably caused by the fact that in Bay Area the weather allows to ride bicycle also in this month too and there are less people on vacations than in Summer months.
 
 ### 2.2 Stations
 

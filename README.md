@@ -19,7 +19,7 @@ The goal is to analyse the data and see if there is a possibility to suggest bic
 2. Dataset overview
 -------------------
 
-We download the dataset for September 2014 - August 2015 from <http://www.bayareabikeshare.com/open-data>. The zip file contains several files. In this analysis we are specifically interested in: 201508\_trip\_data.csv, 201508\_station\_data.csv. The structure of these datasets could be found in README.txt file.
+We download the dataset for September 2014 - August 2015 from <http://www.bayareabikeshare.com/open-data>. The zip file contains several files. In this analysis we are specifically interested in: **201508\_trip\_data.csv**, **201508\_station\_data.csv**. The structure of these datasets could be found in README.txt file.
 
 ### 2.1 Usage by time
 
@@ -35,7 +35,7 @@ During weekdays Subscribers use the service for commuting purpuses with peaks at
 
 ![](README_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
-We clearly see a seasonality pattern, where the smallest number of trips are recorded in December and the highest in June. It is interesting that people in October are also very active. This is probably caused by the fact that in Bay Area the weather allows to ride bicycle also in this month too and there are less people on vacations than in Summer months.
+We clearly see seasonal pattern, where the smallest number of trips are recorded in December and the highest in June. It is interesting that people in October are also very active. This is probably caused by the fact that in Bay Area the weather allows to ride bicycle also in this month too and there are less people on vacations than in Summer months.
 
 ### 2.2 Stations
 
@@ -53,19 +53,11 @@ Now we analyze where Customers and Subscribers travel using shared bicycles at d
 
 #### San Francisco - Trips During Weekdays
 
-    ## Warning: Removed 1560 rows containing missing values (geom_curve).
-
-    ## Warning: Removed 210 rows containing missing values (geom_text_repel).
-
 ![](README_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
 Customers do not have route priorities depending on the time of the day. In mornings many Subscribers travel to the South towards Caltrain Station and Townsend 2nd and 7th St. There are also many Subscribers travelling from Caltrain Station towards Embarcadero. In afternoons many Subscribers also travel from all the Downtown to Caltrain Station and from 2nd and Townsend to Ferry Building. In evenings Subscribers do not have such distinct routes apart from trips towards the south of Market St.
 
 #### San Francisco - Trips During Weekends
-
-    ## Warning: Removed 977 rows containing missing values (geom_curve).
-
-    ## Warning: Removed 210 rows containing missing values (geom_text_repel).
 
 ![](README_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
@@ -73,19 +65,11 @@ During weekends the route preferences of Customers and Subscribers are similar (
 
 #### Palo Alto - Trips During Weekdays
 
-    ## Warning: Removed 7436 rows containing missing values (geom_curve).
-
-    ## Warning: Removed 306 rows containing missing values (geom_text_repel).
-
 ![](README_files/figure-markdown_github/unnamed-chunk-15-1.png)
 
 There is a clear pattern that Subscribers go in mornings to San Antonio Shopping Center from Caltrain Station and come back in afternoons. The Same in Mountain View - Subscribers go to Castro street in mornings and come back in afternoons.
 
 #### San Jose - Trips During Weekdays
-
-    ## Warning: Removed 7011 rows containing missing values (geom_curve).
-
-    ## Warning: Removed 324 rows containing missing values (geom_text_repel).
 
 ![](README_files/figure-markdown_github/unnamed-chunk-17-1.png) Many Subscribers go to San Jose Caltrain Station in mornings and come back in evenings.
 
@@ -116,25 +100,13 @@ Blue/Purple are the stations which tend to have more bikes arriving than departi
 
 #### Stations in San Francisco
 
-    ## Warning: Removed 35 rows containing missing values (geom_point).
-
-    ## Warning: Removed 35 rows containing missing values (geom_label_repel).
-
 ![](README_files/figure-markdown_github/unnamed-chunk-23-1.png)
 
 #### Stations in Palo Alto, Redwood City, Mountain View
 
-    ## Warning: Removed 51 rows containing missing values (geom_point).
-
-    ## Warning: Removed 51 rows containing missing values (geom_label_repel).
-
 ![](README_files/figure-markdown_github/unnamed-chunk-25-1.png)
 
 #### Stations in San Jose
-
-    ## Warning: Removed 54 rows containing missing values (geom_point).
-
-    ## Warning: Removed 54 rows containing missing values (geom_label_repel).
 
 ![](README_files/figure-markdown_github/unnamed-chunk-27-1.png)
 
