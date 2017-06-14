@@ -177,3 +177,7 @@ Here below we provide recommendations how to make the distribution of bicycle us
 | 16       | SJSU - San Salvador at 9th                    | Take off: 181                                                                                                                                                                                                            |
 | 25       | Stanford in Redwood City                      | Take off: 126, 196                                                                                                                                                                                                       |
 | 26       | Redwood City Medical Center                   | Bring 1 heavily used bikes                                                                                                                                                                                               |
+
+----------------------------
+
+If you like the analysis please "star" the repository, if you reuse the code, please "fork" the repository, so I know this analysis is useful and I publish other data analyses as well.
